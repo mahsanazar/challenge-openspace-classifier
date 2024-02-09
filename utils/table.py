@@ -1,74 +1,79 @@
 
-# creat a calss Seat
+
+
 class Seat:
 
-    def __init__(self, free = True, occupant: str):
+    def __init__(self, occupant=None, free=True):
         """" creat constructor"""
-        self.free=free
-        self.occupant=occupant
-    def set_occupant(self, name):
-        """ assign seat to people """
         
-        self.name=name
-        # creat instance of table to use its function
-        instance_table_class=table()
-        # check whether is a empty spot , assign next colleague and remove that from list
-     
-        if  instance_table_class.has_free_spot() is True :
-            instance_table_class.assign_seat(name)
-            self.remove_occupant()
-            return True
-        
-    def remove_occupant(self,name):
-        """ remove someone from a seat and 
-            return the name of 
-            of the person occupying the seat before"""
-        if self.set_occupant() is True:  
-        # Remove the element from the list
-            with open("new_colleagues.cvs", "r") as file:
-                content = file.read()
-                if name in content:
-                       updated_content = content.replace(name, "")
-
-                       # Update the file with the updated contents
-                with open("new_colleagues.cvs", "w") as file:
-                          file.write(updated_content)
-  
-
-class table:
-    def __init__(self, capacity : int, seats):
-        """Creat constructor"""
-        self.capacity=capacity 
-        self.seats=seats
-   ## def __str__(self):
-   ##"""dunder str method"""
-   ## return  f" return capacity: {self.capacity}, seats:   {self.seats}"
-    def has_free_spot(self):
-        """ returns true if there is a capacity"""
-        if self.left_capacity() != 0:
-            return True
+        self.occupant= occupant
+        self.free= free # it is free at first step and not full
+   
+    def remove_occupant(self):
+        """remove occupant"""
+        if self.free is False: # chech if seat is occupied 
+           name_occupant_not_assigend =self.occupant  # if seat is not empty,  teh name  must be removed from this seat
+           self.occupant=None #  it is removed from seat
+           return f"{name_occupant_not_assigend} is not assigned  to this seat" 
+           # the seat was full , we could not assign occupant 
+           
         else:
+            return "the seat  can have a occupant"
+
+
+    def set_occupant(self, name):
+        """ set occupant to list"""
+        if self.free:
+            self.occupant = name # if the seat is occupied, who is on it. 
+            self.free = False # shows that the seat is now occupied
+            return True
+        else: 
             return False
-    def assign_seat(self, name):
-        """ that places someone at the table"""
-       
-        if self.left_capacity() != 0 :
-             
-             
-            
-
-             
-          
-             
-
-        
-             
-
-    def left_capacity(self):
-        """ return  the left capacity"""
-        new_capacity= 4 - self.capacity
-        return new_capacity
+     
     
 
+class table:
+    def __init__(self, capacity : int):
+        """Creat constructor"""
+        self.capacity= 6 # 6 is assined as first value to table 
+        self.seats= []
+        # with a for loop, we creat a list of seats for each table
+        for i in range(0,capacity):
+            seat_instance = Seat(i)
+            self.seats.append(seat_instance)   
+        self.list_assigned_names=[] 
+      
+    def assign(self, name):
+        if self.has_free_spot():  #first, check  whether table has free spots
+          
+              for seat in self.seats:
+                 if seat.free:
+                     seat.set_occupant()# if seat is free we  call this function to occupy name to seat 
+                     self.list_assigned_names.append(self.name) # name must be added to names of assigned
+                     return True
+        return self.list_assigned_names # a new assinged list must  be returned for next tables
+                                
+            
+    def has_free_spot(self):
+        """ returns true if there is a capacity"""
+        # if  empty spots remain, so  the table has capacity
+        for seat in self.seats:
+            if seat.free:
+             return True
+                 
+            
+    
+     
+    
+
+
+
+
+   
+
+        
+        
+        
+    
 
         
